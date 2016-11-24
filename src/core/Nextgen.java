@@ -9,15 +9,17 @@ import org.tbot.internal.Manifest;
 import org.tbot.internal.event.listeners.PaintListener;
 import org.tbot.methods.Game;
 import org.tbot.methods.Skills;
+import org.tbot.methods.Widgets;
 import org.tbot.wrappers.WorldData;
 
 import data.Data;
 import gui.NextgenGUI;
 import state.State;
+import state.combat.Fight;
 import state.combat.WalkToFight;
 import tasks.Task;
 
-@Manifest(name = "TestScript", version = 2)
+@Manifest(name = "TestScript", version = 2.21)
 public class Nextgen extends AbstractScript implements PaintListener {
 
 	public static List<Task> taskHandler = new ArrayList<Task>();
@@ -26,20 +28,22 @@ public class Nextgen extends AbstractScript implements PaintListener {
 	public static List<State> stateHandler = new ArrayList<State>();
 	public static List<State> withdrawItemstateHandler = new ArrayList<State>();
 	public NextgenGUI gui;
+
 	@Override
 	public boolean onStart() {
 		gui = new NextgenGUI();
 		return super.onStart();
 	}
-	
-	
+
 	@Override
 	public int loop() {
 
 		if (Data.shouldRun) {
 
 			if (currentTask != null && !taskIsCompleted(currentTask)) {
-
+				
+				checkContinue();
+				
 				if (!shouldHop()) {
 
 					if (Data.ITEM_WITHDRAW_LIST.isEmpty()) {
@@ -81,13 +85,16 @@ public class Nextgen extends AbstractScript implements PaintListener {
 			log("Waiting for user input");
 			return 2500;
 		}
-
+		log("Loop");
 		return 700;
 	}
-	
-	
 
-
+	public void checkContinue() {
+		if (Widgets.canContinue()) {
+			Widgets.clickContinue();
+		}
+		return;
+	}
 
 	private boolean taskIsCompleted(Task task) {
 		if (task == null) {
@@ -122,7 +129,7 @@ public class Nextgen extends AbstractScript implements PaintListener {
 		}
 		return null;
 	}
-	
+
 	public boolean shouldHop() {
 		if (Game.getCurrentWorld() == Data.badWorld) {
 			return true;
@@ -144,6 +151,7 @@ public class Nextgen extends AbstractScript implements PaintListener {
 			Data.amountOfWorldHops += 1;
 		}
 	}
+
 	private void addStates(Task task) {
 
 		stateHandler.clear();
@@ -152,25 +160,24 @@ public class Nextgen extends AbstractScript implements PaintListener {
 		case STRENGTH:
 		case DEFENCE:
 			stateHandler.add(new WalkToFight());
-			//stateHandler.add(new Fight().init(this));
-			//stateHandler.add(new WalkToFight().init(this));
-			//stateHandler.add(new FightBank().init(this));
-			//stateHandler.add(new WalkToFightBank().init(this));
+			stateHandler.add(new Fight());
+			// stateHandler.add(new WalkToFight().init(this));
+			// stateHandler.add(new FightBank().init(this));
+			// stateHandler.add(new WalkToFightBank().init(this));
 			break;
 		case AGILITY:
 			// if agil level < 20
-			//stateHandler.add(new GnomeCourse().init(this));
-			//stateHandler.add(new WalkToGnomeCourse().init(this));
+			// stateHandler.add(new GnomeCourse().init(this));
+			// stateHandler.add(new WalkToGnomeCourse().init(this));
 			break;
 		}
 
 	}
 
-
 	@Override
 	public void onRepaint(Graphics g) {
-		g.drawString("Mission: " + Data.currentMission, 50,50);
-		
+		g.drawString("Mission: " + Data.currentMission, 50, 50);
+
 	}
 
 }

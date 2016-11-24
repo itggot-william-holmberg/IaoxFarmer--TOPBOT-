@@ -5,19 +5,20 @@ import org.tbot.methods.walking.Walking;
 
 import data.Areas;
 import data.Data;
+import methods.Combat;
 import state.State;
 
 public class WalkToFight extends State{
 
 	@Override
 	public boolean active() {
-		return !Areas.agilityArea.contains(Players.getLocal().getLocation()) ;
+		return !Combat.playerReadyForFight();
 	}
 
 	@Override
 	public void execute() {
 		Data.currentMission = "Lets gogoooogoog";
-		Walking.findPath(Areas.SEAGULL_AREA.getCentralTile()).traverse();
+		Walking.findPath(Combat.getAssignment().getArea().getCentralTile()).traverse();
 	}
 
 	@Override
