@@ -10,7 +10,7 @@ import org.tbot.methods.Skills.Skill;
 
 public enum Assignment {
 	
-	STRENGTH(Skill.STRENGTH),ATTACK(Skill.ATTACK),DEFENCE(Skill.DEFENCE),
+	STRENGTH(Skill.STRENGTH),ATTACK(Skill.ATTACK),DEFENCE(Skill.DEFENCE), RANGE(Skill.RANGED),
 	AGILITY(Skill.AGILITY);
 	
 	private Skill skill;

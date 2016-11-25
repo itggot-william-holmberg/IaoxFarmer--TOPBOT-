@@ -4,9 +4,13 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tbot.bot.TBot;
 import org.tbot.internal.AbstractScript;
 import org.tbot.internal.Manifest;
+import org.tbot.internal.event.EventManager;
 import org.tbot.internal.event.listeners.PaintListener;
+import org.tbot.internal.handlers.RandomHandler;
+import org.tbot.internal.handlers.ScriptHandler;
 import org.tbot.methods.Game;
 import org.tbot.methods.Skills;
 import org.tbot.methods.Widgets;
@@ -15,11 +19,13 @@ import org.tbot.wrappers.WorldData;
 import data.Data;
 import gui.NextgenGUI;
 import state.State;
+import state.agility.AgilityAction;
+import state.agility.WalkToGnomeCourse;
 import state.combat.Fight;
 import state.combat.WalkToFight;
 import tasks.Task;
 
-@Manifest(name = "TestScript", version = 2.21)
+@Manifest(name = "TestScript", version = 2.2122)
 public class Nextgen extends AbstractScript implements PaintListener {
 
 	public static List<Task> taskHandler = new ArrayList<Task>();
@@ -125,7 +131,7 @@ public class Nextgen extends AbstractScript implements PaintListener {
 			}
 		} else {
 			log("Stopping script because no task available");
-			setPaused(true);
+			stop();
 		}
 		return null;
 	}
@@ -159,6 +165,7 @@ public class Nextgen extends AbstractScript implements PaintListener {
 		case ATTACK:
 		case STRENGTH:
 		case DEFENCE:
+		case RANGE:
 			stateHandler.add(new WalkToFight());
 			stateHandler.add(new Fight());
 			// stateHandler.add(new WalkToFight().init(this));
@@ -167,8 +174,8 @@ public class Nextgen extends AbstractScript implements PaintListener {
 			break;
 		case AGILITY:
 			// if agil level < 20
-			// stateHandler.add(new GnomeCourse().init(this));
-			// stateHandler.add(new WalkToGnomeCourse().init(this));
+			stateHandler.add(new AgilityAction());
+			stateHandler.add(new WalkToGnomeCourse());
 			break;
 		}
 
@@ -178,6 +185,10 @@ public class Nextgen extends AbstractScript implements PaintListener {
 	public void onRepaint(Graphics g) {
 		g.drawString("Mission: " + Data.currentMission, 50, 50);
 
+	}
+	
+	public static void stop(){
+		TBot.getBot().getScriptHandler().stopScript();
 	}
 
 }

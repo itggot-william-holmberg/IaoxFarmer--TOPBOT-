@@ -25,7 +25,16 @@ public class Fight extends State {
 
 	@Override
 	public void execute() {
-		if (!Players.getLocal().isHealthBarVisible() || Players.getLocal().isMoving()) {				//check if our player is 100% ready to take on a fight
+		/*if (myPlayerNeedsToEat()) {
+			eat();
+		} else {
+			if (lootAvailable()) {
+				loot();
+			} else {
+				defaultFight();
+			}
+		}*/
+		if (Combat.playerCanFight()) {				//check if our player is 100% ready to take on a fight
 			if (Players.getLocal().getInteractingEntity() == null) {
 				Data.currentMission = "Lets attack";
 				attack();
@@ -52,9 +61,9 @@ public class Fight extends State {
 			Time.sleepUntil(new Condition() {
 				@Override
 				public boolean check() {
-					return potential_enemy.isDead() || potential_enemy.isInteractingWithLocalPlayer(); 													//break the loop if the enemy is dead or if the enemy is succesfully interacting with our player.
+					return potential_enemy.isDead() || potential_enemy.getHealthPercent() < 0 || potential_enemy.isInteractingWithLocalPlayer(); 													//break the loop if the enemy is dead or if the enemy is succesfully interacting with our player.
 				}
-			}, Random.nextInt(5000, 6000));
+			}, Random.nextInt(2000,4000));
 			LogHandler.log("Lets break the loop");
 		}
 	}
@@ -65,9 +74,9 @@ public class Fight extends State {
 			Time.sleepUntil(new Condition() {
 				@Override
 				public boolean check() {
-					return npc.isDead() || npc.isInteractingWithLocalPlayer(); 													//break the loop if the enemy is dead or if the enemy is succesfully interacting with our player.
+					return npc.isDead() || potential_enemy.getHealthPercent() < 0 || npc.isInteractingWithLocalPlayer(); 													//break the loop if the enemy is dead or if the enemy is succesfully interacting with our player.
 				}
-			}, Random.nextInt(5000, 6000));
+			}, Random.nextInt(2000,4000));
 			LogHandler.log("Lets break the loop");
 		}
 	}
