@@ -20,12 +20,12 @@ import data.Data;
 import gui.NextgenGUI;
 import state.State;
 import state.agility.AgilityAction;
-import state.agility.WalkToGnomeCourse;
+import state.agility.WalkToAgilityCourse;
 import state.combat.Fight;
 import state.combat.WalkToFight;
 import tasks.Task;
 
-@Manifest(name = "TestScript", version = 2.2122)
+@Manifest(name = "TestScript", version = 2.3)
 public class Nextgen extends AbstractScript implements PaintListener {
 
 	public static List<Task> taskHandler = new ArrayList<Task>();
@@ -175,7 +175,7 @@ public class Nextgen extends AbstractScript implements PaintListener {
 		case AGILITY:
 			// if agil level < 20
 			stateHandler.add(new AgilityAction());
-			stateHandler.add(new WalkToGnomeCourse());
+			stateHandler.add(new WalkToAgilityCourse());
 			break;
 		}
 

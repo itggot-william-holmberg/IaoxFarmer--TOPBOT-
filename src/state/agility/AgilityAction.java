@@ -15,7 +15,7 @@ public class AgilityAction extends State {
 
 	@Override
 	public boolean active() {
-		return true;
+		return false;
 	}
 
 	@Override
