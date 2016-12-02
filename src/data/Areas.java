@@ -115,4 +115,16 @@ public final static Area wholeDungeonArea = new Area (2881,9793,2950,9858);
 public static final Area agilityArea = new Area(2936, 3352, 2942, 3358);
 public static final Area agilityArea2 = new Area(2935, 3357, 2932, 3352);
 public static final Area downLadderArea = new Area(2881, 9801, 2887, 9794);
+public static Area FALADOR_WEST = new Area(new Tile[] {
+			new Tile(2948, 3367, 0),
+			new Tile(2944, 3368, 0),
+			new Tile(2944, 3372, 0),
+			new Tile(2947, 3372, 0)
+	});
+	public static Area DRAYNOR = new Area(new Tile[] {
+			new Tile(3096, 3243, 0),
+			new Tile(3091, 3242, 0),
+			new Tile(3090, 3245, 0),
+			new Tile(3096, 3245, 0)
+	});
 }

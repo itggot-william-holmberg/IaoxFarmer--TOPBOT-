@@ -1,3 +1,4 @@
+
 package state.combat;
 
 import org.tbot.methods.Players;
@@ -12,7 +13,7 @@ public class WalkToFight extends State{
 
 	@Override
 	public boolean active() {
-		return !Combat.playerReadyForFight();
+		return Combat.playerReadyForCombat() && !Combat.getAssignment().getArea().contains(Players.getLocal());
 	}
 
 	@Override

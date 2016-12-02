@@ -12,29 +12,38 @@ import methods.Agility;
 import state.State;
 
 public class AgilityAction extends State {
-
+	private int i;
 	@Override
 	public boolean active() {
-		return false;
+		return Agility.playerInObstacleArea();
 	}
 
 	@Override
 	public void execute() {
+		i = 0;
 		for (AgilityObstacle obstacle : Agility.getAssignment().getObstacles()){
 			if (obstacle.getArea().contains(Players.getLocal())) {
 				LogHandler.log("We found the perfect obstacle");
 				if (Agility.shouldMove()) {
 					Agility.climbObs(obstacle.getAction(), obstacle.getObstacleID());
+					LogHandler.log(i + "    " + Agility.getAssignment().getObstacles().size());
+					if(i+1<Agility.getAssignment().getObstacles().size()){
+						LogHandler.log("Lets do a nice sleep");
 					Time.sleepUntil(new Condition() {
 						@Override
 						public boolean check() {
-							return !Players.getLocal().isMoving();
+							return Agility.getAssignment().getObstacles().get(i+1).getArea().contains(Players.getLocal() );
 						}
-					}, Random.nextInt(4000, 6000));
+					}, Random.nextInt(10000,15000));
+					}else{
+						LogHandler.log("Lets do a bad sleep");
+						Time.sleep(8500,11000);
+					}
 				}
 				return;
 			}else{
 				LogHandler.log("No Obstacle found");
+				i++;
 			}
 		}
 	}

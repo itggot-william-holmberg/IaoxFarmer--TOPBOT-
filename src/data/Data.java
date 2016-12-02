@@ -12,7 +12,9 @@ import tasks.Task;
 
 public class Data {
 
-	public static List<String> ITEM_WITHDRAW_LIST = new ArrayList<String>();
+	public static List<Item> ITEM_WE_NEED_TO_BUY_LIST = new ArrayList<Item>();
+
+	public static List<Item> ITEM_WITHDRAW_LIST = new ArrayList<Item>();
 
 	public static boolean shouldRun = false;
 	
@@ -31,5 +33,17 @@ public class Data {
 	public static int amountOfFood;
 
 	public static GameObject lastClickedObject = null;
+
+	public static String foodName = "Tuna";
+	
+	public static List<Integer> lootID = new ArrayList<Integer>();
+
+	public static int moneyMade;
+
+	public static int[] druidLoot = {Item.grimyRanarr.getItemID(), Item.grimyAvantoe.getItemID(),
+									 Item.grimyDwarfWeed.getItemID(), Item.grimyHarralander.getItemID(),
+									 Item.lawRune.getItemID(), Item.mithrilBolts.getItemID(),
+									 Item.grimyIrit.getItemID(), Item.grimyKwuarm.getItemID(),
+									 Item.grimyLantadyme.getItemID()};
 
 }

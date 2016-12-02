@@ -1,12 +1,14 @@
 package state.combat;
 
 import org.tbot.internal.handlers.LogHandler;
+import org.tbot.methods.Camera;
 import org.tbot.methods.Mouse;
 import org.tbot.methods.Npcs;
 import org.tbot.methods.Players;
 import org.tbot.methods.Random;
 import org.tbot.methods.Time;
 import org.tbot.methods.input.mouse.target.ModelMouseTarget;
+import org.tbot.methods.walking.Walking;
 import org.tbot.util.Condition;
 import org.tbot.wrappers.NPC;
 
@@ -20,20 +22,34 @@ public class Fight extends State {
 	private ModelMouseTarget mouseTarget;
 	@Override
 	public boolean active() {
-		return Combat.playerReadyForFight();
+		return Combat.playerReadyForCombat() && Combat.getAssignment().getArea().contains(Players.getLocal());
 	}
 
 	@Override
 	public void execute() {
-		/*if (myPlayerNeedsToEat()) {
-			eat();
+		switch (Combat.getAssignment()) {
+		case DRUIDS:
+			druidFight();
+			break;
+		default:
+			defaultFight();
+			break;
+		}
+	}
+	
+	private void druidFight() {
+		if (Combat.myPlayerNeedsToEat()) {
+			Combat.eat();
 		} else {
-			if (lootAvailable()) {
-				loot();
+			if (Combat.lootAvailable()) {
+				Combat.loot();
 			} else {
 				defaultFight();
 			}
-		}*/
+		}		
+	}
+
+	public void defaultFight(){
 		if (Combat.playerCanFight()) {				//check if our player is 100% ready to take on a fight
 			if (Players.getLocal().getInteractingEntity() == null) {
 				Data.currentMission = "Lets attack";
@@ -57,6 +73,7 @@ public class Fight extends State {
 		potential_enemy = Npcs.getNearest(npc -> Combat.getAssignment().getNpcID().contains(npc.getID())
 				&& !npc.isHealthBarVisible() && npc.getHealthPercent() > 0);
 		if (potential_enemy != null) {
+			if(potential_enemy.isOnScreen()){
 			potential_enemy.interact("Attack");
 			Time.sleepUntil(new Condition() {
 				@Override
@@ -65,6 +82,10 @@ public class Fight extends State {
 				}
 			}, Random.nextInt(2000,4000));
 			LogHandler.log("Lets break the loop");
+			}else{
+				Walking.findLocalPath(potential_enemy).traverse();
+				Camera.turnTo(potential_enemy);
+			}
 		}
 	}
 	

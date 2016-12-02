@@ -3,6 +3,7 @@ package core;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.tbot.bot.TBot;
 import org.tbot.internal.AbstractScript;
@@ -13,6 +14,7 @@ import org.tbot.internal.handlers.RandomHandler;
 import org.tbot.internal.handlers.ScriptHandler;
 import org.tbot.methods.Game;
 import org.tbot.methods.Skills;
+import org.tbot.methods.Time;
 import org.tbot.methods.Widgets;
 import org.tbot.wrappers.WorldData;
 
@@ -22,10 +24,12 @@ import state.State;
 import state.agility.AgilityAction;
 import state.agility.WalkToAgilityCourse;
 import state.combat.Fight;
+import state.combat.FightBank;
 import state.combat.WalkToFight;
+import state.combat.WalkToFightBank;
 import tasks.Task;
 
-@Manifest(name = "TestScript", version = 2.3)
+@Manifest(name = "TestScript", version = 2.7)
 public class Nextgen extends AbstractScript implements PaintListener {
 
 	public static List<Task> taskHandler = new ArrayList<Task>();
@@ -34,10 +38,13 @@ public class Nextgen extends AbstractScript implements PaintListener {
 	public static List<State> stateHandler = new ArrayList<State>();
 	public static List<State> withdrawItemstateHandler = new ArrayList<State>();
 	public NextgenGUI gui;
+	public static long timeRan;
+	public static long timeStarted;
 
 	@Override
 	public boolean onStart() {
 		gui = new NextgenGUI();
+		timeStarted = System.currentTimeMillis();
 		return super.onStart();
 	}
 
@@ -168,9 +175,8 @@ public class Nextgen extends AbstractScript implements PaintListener {
 		case RANGE:
 			stateHandler.add(new WalkToFight());
 			stateHandler.add(new Fight());
-			// stateHandler.add(new WalkToFight().init(this));
-			// stateHandler.add(new FightBank().init(this));
-			// stateHandler.add(new WalkToFightBank().init(this));
+			stateHandler.add(new FightBank());
+			stateHandler.add(new WalkToFightBank());
 			break;
 		case AGILITY:
 			// if agil level < 20
@@ -183,8 +189,32 @@ public class Nextgen extends AbstractScript implements PaintListener {
 
 	@Override
 	public void onRepaint(Graphics g) {
-		g.drawString("Mission: " + Data.currentMission, 50, 50);
+		timeRan = System.currentTimeMillis() - timeStarted;
+		g.drawString("Mission: " + Data.currentMission, 340, 345);
+		g.drawString("Time ran: " + ft(timeRan), 340,365);
+		g.drawString("Money made: " + Data.moneyMade  + " (" + perHour(Data.moneyMade) + ")", 340,385);
+	}
+	
+	private String ft(long duration) {
 
+		String res = "";
+		long days = TimeUnit.MILLISECONDS.toDays(duration);
+		long hours = TimeUnit.MILLISECONDS.toHours(duration)
+				- TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(duration));
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration)
+				- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration));
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(duration)
+				- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
+		if (days == 0) {
+			res = (hours + ":" + minutes + ":" + seconds);
+		} else {
+			res = (days + ":" + hours + ":" + minutes + ":" + seconds);
+		}
+		return res;
+	}
+	
+	private int perHour(int i){
+		return (int) (i /((timeRan) / 3600000.0D));
 	}
 	
 	public static void stop(){
