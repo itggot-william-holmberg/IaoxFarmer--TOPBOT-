@@ -29,7 +29,7 @@ import state.combat.WalkToFight;
 import state.combat.WalkToFightBank;
 import tasks.Task;
 
-@Manifest(name = "TestScript", version = 2.7)
+@Manifest(name = "TestScript", version = 2.8)
 public class Nextgen extends AbstractScript implements PaintListener {
 
 	public static List<Task> taskHandler = new ArrayList<Task>();
